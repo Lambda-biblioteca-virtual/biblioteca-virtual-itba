@@ -42,6 +42,7 @@
   }
   function errorMessage(error) {
     const code = error?.code;
+    const detail = String(error?.message || '');
     if (code === 'invalid_credentials') return 'El correo o la contraseña no coinciden.';
     if (code === 'email_not_confirmed') { $('resend').hidden = false; return 'Confirmá tu correo antes de ingresar. Revisá también la carpeta de spam.'; }
     if (code === 'over_email_send_rate_limit' || code === 'over_request_rate_limit') return 'Hubo demasiados intentos. Esperá unos minutos y probá de nuevo.';
@@ -49,7 +50,19 @@
     if (code === 'weak_password') return 'Elegí una contraseña más segura, de al menos 8 caracteres.';
     if (code === 'same_password') return 'Elegí una contraseña diferente a la anterior.';
     if (code === 'user_already_exists') return 'Ya existe una cuenta con ese correo. Probá iniciar sesión.';
-    return 'No pudimos completar la solicitud. Revisá tu conexión y probá de nuevo.';
+    if (/error sending (confirmation|recovery|magic link|email change|invite) email/i.test(detail)) return 'No pudimos enviar el correo. El equipo de Lambda necesita revisar la configuración del servicio de correo.';
+    if (code === 'signup_disabled' || code === 'email_provider_disabled') return 'El registro por correo no está habilitado en este momento. Contactá al equipo de Lambda.';
+    if (code?.startsWith('hook_') || /database error saving new user/i.test(detail)) return 'No pudimos completar el registro por un problema del servicio de cuentas. Contactá al equipo de Lambda.';
+    if (code === 'request_timeout' || error?.name === 'AuthRetryableFetchError' && !error.status || error instanceof TypeError && /fetch|network/i.test(detail)) return 'No pudimos conectar con el servicio. Revisá tu conexión e intentá de nuevo.';
+    return 'El servicio de cuentas no pudo completar la solicitud. Intentá más tarde o contactá al equipo de Lambda.';
+  }
+  function reportError(error) {
+    // Record diagnostic identifiers only; never log credentials or server messages.
+    console.warn('Lambda Auth:', {
+      code: /^[a-z_]{1,80}$/.test(error?.code || '') ? error.code : 'unknown',
+      status: Number.isInteger(error?.status) ? error.status : null
+    });
+    message(errorMessage(error), true);
   }
   async function enter(user) {
     if (!validEmail(user?.email || '') || !user?.email_confirmed_at) {
@@ -66,7 +79,7 @@
     controls.forEach((button) => { button.disabled = true; });
     $('auth-form').setAttribute('aria-busy', 'true');
     message('Un momento…');
-    try { await action(); } catch (error) { message(errorMessage(error), true); }
+    try { await action(); } catch (error) { reportError(error); }
     finally { busy = false; controls.forEach((button) => { button.disabled = false; }); $('auth-form').removeAttribute('aria-busy'); }
   }
   document.querySelectorAll('[data-mode]').forEach((button) => button.addEventListener('click', () => setMode(button.dataset.mode)));
@@ -144,6 +157,6 @@
       if (userError) throw userError;
       if (mode === 'update') { recoveryReady = validEmail(user?.email || '') && Boolean(user.email_confirmed_at); return; }
       await enter(user);
-    } catch (error) { message(errorMessage(error), true); }
+    } catch (error) { reportError(error); }
   })();
 })();
