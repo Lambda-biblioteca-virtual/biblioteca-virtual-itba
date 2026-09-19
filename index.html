@@ -8,120 +8,113 @@
   </head>
   <body>
     <header class="topbar">
-      <a class="brand" href="#inicio">Biblioteca Virtual ITBA</a>
+      <a class="brand" href="#inicio" aria-label="Biblioteca Virtual ITBA">
+        <span class="brand-mark">ITBA</span>
+        <span>Biblioteca Virtual</span>
+      </a>
       <nav class="nav" aria-label="Principal">
+        <a href="#explorar">Explorar</a>
         <a href="#materiales">Materiales</a>
-        <a href="#subir">Subir</a>
-        <a href="#criterios">Criterios</a>
+        <a href="admin.html">Admin</a>
       </nav>
     </header>
 
     <main>
       <section class="hero" id="inicio">
         <div class="hero-content">
-          <p class="eyebrow">Apuntes, parciales y recursos por materia</p>
-          <h1>Todo el material de estudio, organizado para estudiantes del ITBA.</h1>
+          <p class="eyebrow">Bibliografia, parciales, resumenes y guias</p>
+          <h1>Una biblioteca ordenada por carrera, año, cuatrimestre y materia.</h1>
           <p class="intro">
-            Un espacio colaborativo para encontrar bibliografia, parciales viejos,
-            resumenes, guias y recursos utiles sin importar la carrera.
+            Pensada para que cualquier estudiante del ITBA encuentre rapido el
+            material que necesita, sin perderse entre carpetas sueltas.
           </p>
-          <div class="hero-actions">
-            <a class="button primary" href="#materiales">Explorar materiales</a>
-            <a class="button secondary" href="#subir">Aportar un recurso</a>
-          </div>
-        </div>
-      </section>
-
-      <section class="search-section" aria-labelledby="busqueda-title">
-        <div class="section-inner">
-          <h2 id="busqueda-title">Buscar recursos</h2>
-          <form class="search-panel">
-            <label>
-              Carrera
-              <select>
-                <option>Todas</option>
-                <option>Ingenieria Informatica</option>
-                <option>Ingenieria Industrial</option>
-                <option>Ingenieria Mecanica</option>
-                <option>Administracion y Sistemas</option>
-              </select>
-            </label>
-            <label>
-              Materia
-              <input type="search" placeholder="Ej: Analisis Matematico I" />
-            </label>
-            <label>
-              Tipo
-              <select>
-                <option>Todos</option>
-                <option>Parcial</option>
-                <option>Resumen</option>
-                <option>Bibliografia</option>
-                <option>Guia</option>
-              </select>
-            </label>
-            <button type="button">Buscar</button>
+          <form class="hero-search" role="search">
+            <input id="global-search" type="search" placeholder="Buscar por materia, carrera o tipo de material" />
+            <button type="button" id="clear-search">Limpiar</button>
           </form>
         </div>
       </section>
 
-      <section class="materials" id="materiales" aria-labelledby="materials-title">
+      <section class="explorer" id="explorar" aria-labelledby="explorer-title">
         <div class="section-inner">
           <div class="section-heading">
-            <h2 id="materials-title">Materiales destacados</h2>
-            <p>Ejemplos iniciales para mostrar como podria organizarse la biblioteca.</p>
-          </div>
-          <div class="resource-grid">
-            <article class="resource-card">
-              <span class="tag">Parcial</span>
-              <h3>Analisis Matematico I</h3>
-              <p>Parciales resueltos y modelos de practica por cuatrimestre.</p>
-              <a href="#">Ver recursos</a>
-            </article>
-            <article class="resource-card">
-              <span class="tag">Resumen</span>
-              <h3>Algebra Lineal</h3>
-              <p>Resumenes teoricos, ejercicios tipo y guias comentadas.</p>
-              <a href="#">Ver recursos</a>
-            </article>
-            <article class="resource-card">
-              <span class="tag">Bibliografia</span>
-              <h3>Fisica I</h3>
-              <p>Listado de libros recomendados, capitulos y material complementario.</p>
-              <a href="#">Ver recursos</a>
-            </article>
-          </div>
-        </div>
-      </section>
-
-      <section class="upload" id="subir" aria-labelledby="upload-title">
-        <div class="section-inner split">
-          <div>
-            <h2 id="upload-title">Aportar material</h2>
+            <p class="eyebrow dark">Explorador academico</p>
+            <h2 id="explorer-title">Elegi una carrera para ver su plan.</h2>
             <p>
-              En la primera version, podemos recibir aportes mediante un formulario
-              externo. Mas adelante se puede sumar login, moderacion y carga directa.
+              Esta primera carga sale de los planes de estudio que agregaste en
+              la carpeta Carreras. La estructura ya queda lista para ir sumando
+              archivos reales materia por materia.
             </p>
           </div>
-          <a class="button primary" href="mailto:tu-email@ejemplo.com">Enviar material</a>
+
+          <div class="layout">
+            <aside class="career-list" aria-label="Carreras">
+              <div id="career-buttons"></div>
+            </aside>
+            <section class="plan-panel" aria-live="polite">
+              <div class="plan-title-row">
+                <div>
+                  <p class="panel-label">Carrera seleccionada</p>
+                  <h3 id="selected-career">Ingenieria Informatica</h3>
+                </div>
+                <a id="plan-link" class="text-link" href="#" target="_blank" rel="noreferrer">Ver plan original</a>
+              </div>
+              <div id="curriculum" class="curriculum"></div>
+            </section>
+          </div>
         </div>
       </section>
 
-      <section class="criteria" id="criterios" aria-labelledby="criteria-title">
+      <section class="materials-section" id="materiales" aria-labelledby="materials-title">
         <div class="section-inner">
-          <h2 id="criteria-title">Criterios para cuidar la biblioteca</h2>
-          <ul class="criteria-list">
-            <li>Subir archivos claros, legibles y bien nombrados.</li>
-            <li>Indicar materia, carrera, profesor o catedra cuando aplique.</li>
-            <li>No publicar contenido privado, soluciones robadas ni datos personales.</li>
-            <li>Respetar derechos de autor y priorizar enlaces oficiales cuando existan.</li>
-          </ul>
+          <div class="section-heading">
+            <p class="eyebrow dark">Biblioteca</p>
+            <h2 id="materials-title">Materiales disponibles</h2>
+            <p>
+              Cuando subamos archivos reales, van a aparecer aca filtrados por
+              carrera, año, cuatrimestre, materia y tipo.
+            </p>
+          </div>
+
+          <div class="filters" aria-label="Filtros de materiales">
+            <label>
+              Carrera
+              <select id="filter-career"></select>
+            </label>
+            <label>
+              Año
+              <select id="filter-year">
+                <option value="">Todos</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+              </select>
+            </label>
+            <label>
+              Tipo
+              <select id="filter-type">
+                <option value="">Todos</option>
+                <option>Parcial</option>
+                <option>Resumen</option>
+                <option>Bibliografia</option>
+                <option>Guia</option>
+                <option>TP</option>
+              </select>
+            </label>
+          </div>
+
+          <div id="materials-list" class="materials-list"></div>
         </div>
       </section>
     </main>
 
     <footer class="footer">
-      <p>Proyecto estudiantil independiente.</p>
+      <p>Proyecto estudiantil independiente. Cuidemos los derechos de autor y los datos personales.</p>
     </footer>
+
+    <script src="data.js"></script>
+    <script src="app.js"></script>
   </body>
 </html>

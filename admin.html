@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin - Biblioteca Virtual ITBA</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <a class="brand" href="index.html">
+        <span class="brand-mark">ITBA</span>
+        <span>Biblioteca Virtual</span>
+      </a>
+      <nav class="nav" aria-label="Principal">
+        <a href="index.html#explorar">Explorar</a>
+        <a href="index.html#materiales">Materiales</a>
+        <a href="admin.html">Admin</a>
+      </nav>
+    </header>
+
+    <main>
+      <section class="admin-hero">
+        <div class="section-inner">
+          <p class="eyebrow dark">Panel admin</p>
+          <h1>Cargar materiales para la biblioteca.</h1>
+          <p class="intro dark-copy">
+            En esta version gratis con GitHub Pages, el panel prepara la ficha
+            del material. Para que quede online para todos, despues hay que
+            subir el archivo al repositorio y publicar el cambio.
+          </p>
+        </div>
+      </section>
+
+      <section class="admin-section">
+        <div class="section-inner admin-grid">
+          <form class="admin-card" id="admin-form">
+            <label>
+              Clave admin
+              <input id="admin-key" type="password" placeholder="itba-admin" />
+            </label>
+            <label>
+              Carrera
+              <select id="admin-career"></select>
+            </label>
+            <label>
+              Año
+              <select id="admin-year">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+              </select>
+            </label>
+            <label>
+              Cuatrimestre
+              <select id="admin-term">
+                <option value="1">1</option>
+                <option value="2">2</option>
+              </select>
+            </label>
+            <label>
+              Materia
+              <select id="admin-subject"></select>
+            </label>
+            <label>
+              Tipo de material
+              <select id="admin-type">
+                <option>Parcial</option>
+                <option>Resumen</option>
+                <option>Bibliografia</option>
+                <option>Guia</option>
+                <option>TP</option>
+              </select>
+            </label>
+            <label>
+              Titulo visible
+              <input id="admin-title" type="text" placeholder="Ej: Parcial 2024 resuelto" />
+            </label>
+            <label>
+              Archivo o enlace
+              <input id="admin-url" type="text" placeholder="materiales/informatica/analisis-1/parcial-2024.pdf" />
+            </label>
+            <button type="submit">Generar entrada</button>
+          </form>
+
+          <aside class="admin-card warm-card">
+            <h2>Como entrar</h2>
+            <p>
+              Entras desde el boton Admin del menu o escribiendo
+              <strong>/admin.html</strong> al final del dominio.
+            </p>
+            <p>
+              Clave temporal: <strong>itba-admin</strong>. Esto no es seguridad
+              real; solo evita cambios accidentales mientras la web sea estatica.
+            </p>
+            <h2>Resultado</h2>
+            <p id="admin-message">Completa el formulario para generar la ficha.</p>
+            <pre id="admin-output"></pre>
+          </aside>
+        </div>
+      </section>
+    </main>
+
+    <script src="data.js"></script>
+    <script src="admin.js"></script>
+  </body>
+</html>
