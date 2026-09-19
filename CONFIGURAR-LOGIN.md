@@ -1,50 +1,61 @@
-# Activar el acceso a Lambda
+# Activar Google en Lambda
 
-La pagina de acceso es https://biblioteca-virtual-itba.vercel.app/login.html.
-La aplicacion requiere una sesion con correo ITBA confirmado. El registro,
-inicio de sesion, recuperacion y cierre de sesion utilizan Supabase Auth.
+El boton de Google crea la cuenta la primera vez e inicia sesion las siguientes.
+No necesita SMTP ni un dominio propio. Publicar el codigo no activa Google:
+todavia hay que completar la configuracion externa.
 
-## Pasos en Supabase
+## Google Cloud
 
-1. Abrir el proyecto `nlxsidqaqtslaoyuaevc` y entrar a **SQL Editor**.
-2. Ejecutar el contenido de `supabase-auth.sql`. Incluye verificaciones del
-   dominio sin crear usuarios ni enviar correos.
-3. En **Authentication > Hooks**, agregar un hook **Before User Created**
-   de tipo Postgres y elegir `public.lambda_before_user_created`. Activarlo.
-   Este paso es necesario: crear la funcion SQL por si solo no la activa.
-4. En **Authentication > Sign In / Providers > Email**, mantener Email y
-   **Confirm email** habilitados. Configurar contrasenas de al menos 8 caracteres.
-5. En **Authentication > URL Configuration**, configurar:
-   - Site URL: `https://biblioteca-virtual-itba.vercel.app`
-   - Redirect URL: `https://biblioteca-virtual-itba.vercel.app/login.html`
-   - Redirect URL: `https://biblioteca-virtual-itba.vercel.app/login.html?mode=update`
-6. Configurar un proveedor de correo en **Authentication > Email > SMTP Settings**.
-   El servicio de prueba de Supabase solo envia a direcciones del equipo y tiene
-   limites reducidos. No desactivar la confirmacion para evitar este paso: hay
-   que comprobar que cada estudiante tiene acceso al correo que declara.
+1. Entrar a https://console.cloud.google.com/ con la cuenta que administrara
+   el proyecto (puede ser un Gmail personal). Crear un proyecto llamado Lambda.
+2. Abrir Google Auth Platform y seleccionar Get started / Comenzar.
+3. Nombre: Lambda. Correo de soporte y contacto: un correo que ustedes controlen.
+   Audiencia: External / Externo, salvo que el proyecto pertenezca formalmente
+   a la organizacion Google Workspace del ITBA.
+4. En Data Access, usar solamente openid, email y profile. No pedir acceso a Gmail.
+5. En Audience, si figura Testing, agregar gastella@itba.edu.ar y los correos
+   institucionales de los otros integrantes como usuarios de prueba.
+   Antes de abrir a todos, revisar los requisitos y pasar a In production.
+6. En Clients, crear un cliente OAuth de tipo Web application.
+7. Authorized JavaScript origins:
+   https://biblioteca-virtual-itba.vercel.app
+8. Authorized redirect URIs:
+   https://nlxsidqaqtslaoyuaevc.supabase.co/auth/v1/callback
+9. Crear y conservar Client ID y Client Secret. El secreto se pega solo en
+   Supabase, nunca en GitHub, en el codigo ni en un mensaje del chat.
 
-## Comprobacion real
+## Supabase
 
-- Registrarse con un correo ITBA propio, abrir el correo de confirmacion y
-  comprobar que se ingresa a la biblioteca.
-- Cerrar sesion, iniciar nuevamente y recargar para comprobar persistencia.
-- Solicitar la recuperacion, abrir el enlace y cambiar la contrasena.
-- Verificar en Authentication > Hooks que el hook esta activo; las validaciones
-  del formulario no sustituyen la restriccion del servidor.
+1. Authentication > Sign In / Providers > Google: habilitar Google y pegar
+   Client ID y Client Secret. Guardar. Mantener comprobaciones de nonce y email.
+2. Authentication > URL Configuration:
+   Site URL: https://biblioteca-virtual-itba.vercel.app
+   Redirect URL: https://biblioteca-virtual-itba.vercel.app/login.html
+3. Ejecutar supabase-auth.sql en SQL Editor si no se hizo antes.
+4. Authentication > Hooks > Before User Created: activar
+   public.lambda_before_user_created. Es indispensable para restringir
+   la creacion de cuentas en el servidor a @itba.edu.ar.
+5. Desactivar Custom SMTP si quedaron datos incompletos de Resend.
+   Google no requiere ese servicio. Mantener Confirm email habilitado.
+6. Para usar exclusivamente Google, desactivar el proveedor Email.
+   Esto tambien deshabilita el acceso por contrasena de cuentas anteriores;
+   esas personas deberan usar Google.
 
-## Alcance
+## Comprobar
 
-Los guardados y las descargas se conservan por cuenta en este navegador; aun
-no se sincronizan entre dispositivos. El historial anterior, sin cuenta,
-permanece en el navegador pero no se asigna automaticamente a una persona.
+- Abrir https://biblioteca-virtual-itba.vercel.app/login.html.
+- Continuar con Google y elegir la cuenta @itba.edu.ar.
+- Completar Microsoft Authenticator si lo exige la universidad.
+- Comprobar entrada a la biblioteca, persistencia al recargar y cierre de sesion.
+- La cuenta debe aparecer en Authentication > Users. Una cuenta ajena al ITBA
+  no debe crearse con el hook activo, ni acceder a la interfaz.
 
-Este cambio controla el registro y el acceso desde la interfaz. Los PDFs
-existentes en el repositorio y el catalogo publico siguen siendo publicos.
-Para privatizarlos se requiere mover los archivos a Storage privado y cambiar
-las politicas de acceso. El panel admin anterior sigue siendo un generador
-local de fichas, no un sistema de administracion con permisos de Supabase.
+El parametro hd de Google es solo una sugerencia de dominio; la restriccion
+real de nuevas cuentas corresponde al hook de Supabase. Si la universidad
+bloquea apps externas, hay que consultarlo con soporte del ITBA.
 
-Documentacion:
-- https://supabase.com/docs/guides/auth/passwords
-- https://supabase.com/docs/guides/auth/auth-hooks/before-user-created-hook
-- https://supabase.com/docs/guides/auth/auth-smtp
+Los materiales existentes siguen siendo publicos. Este cambio controla el
+registro y el acceso desde la interfaz. Guardados e historial se conservan
+por cuenta en cada navegador, sin sincronizacion entre dispositivos.
+
+Documentacion: https://supabase.com/docs/guides/auth/social-login/auth-google

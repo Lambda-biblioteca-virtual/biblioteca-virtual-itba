@@ -22,4 +22,8 @@
 #auth-message{font-size:13px;line-height:1.6;padding:12px;border-left:3px solid var(--green);background:#edf1e9;overflow-wrap:anywhere}
 #auth-message[data-error=true]{border-color:#a13e38;background:#f7e9e2;color:#81332d}
 .auth-footer{text-align:center;font-size:11px;color:var(--muted);margin-top:44px}
+.google-panel{text-align:center}
+.google-button{display:flex;align-items:center;justify-content:center;min-height:48px;width:100%;padding:12px 20px;background:#fff;color:#1f1f1f;border:1px solid #747775;border-radius:4px;font-weight:600}
+.google-button:hover{background:#f2f5fa}
+.auth-domain{font-size:12px;color:var(--muted);margin:14px 0 24px}
 @media(max-width:480px){.auth-main{padding:36px 24px 24px}.auth-brand{margin-bottom:30px}.auth-brand-line strong{font-size:34px}.auth-brand-line b{font-size:52px}.auth-panel h1{font-size:25px}}
