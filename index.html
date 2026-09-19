@@ -4,12 +4,13 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#f7f2e7">
-  <title>Biblioteca Virtual ITBA</title>
+  <title>Lambda | Biblioteca Virtual ITBA</title>
   <link rel="stylesheet" href="library.css">
+  <link rel="stylesheet" href="lambda.css">
 </head>
 <body>
   <aside class="sidebar">
-    <a class="brand" href="#inicio" aria-label="Biblioteca ITBA, inicio">ITBA<span>biblioteca</span></a>
+    <a class="brand" href="#inicio" aria-label="Lambda, biblioteca virtual ITBA, inicio"><span class="brand-line"><b class="brand-symbol">λ</b><strong>Lambda</strong></span><span class="brand-university">ITBA</span><span class="brand-description">Biblioteca virtual</span></a>
     <nav aria-label="Navegación principal">
       <a href="#inicio" data-view="inicio"><i data-lucide="house"></i><span>Inicio</span></a>
       <a href="#buscar" data-view="buscar"><i data-lucide="search"></i><span>Buscar</span></a>
@@ -19,9 +20,9 @@
     <div class="sidebar-bottom"><a href="admin.html"><i data-lucide="settings-2"></i><span>Administrar</span></a><p>Hecha para compartir.<br>Y seguir aprendiendo.</p></div>
   </aside>
   <div class="workspace">
-    <header class="topbar"><span>Biblioteca Virtual <strong>ITBA</strong></span><span class="community"><i data-lucide="users-round"></i>De estudiantes, para estudiantes</span></header>
+    <header class="topbar"><span>Lambda <strong>Biblioteca Virtual ITBA</strong></span></header>
     <main>
-      <div class="page-heading"><div><p class="eyebrow" id="eyebrow">TU ESPACIO DE ESTUDIO</p><h1 id="page-title">¿Qué estudiamos hoy?</h1></div><span class="heading-mark" aria-hidden="true"><i data-lucide="book-open"></i></span></div>
+      <div class="page-heading" id="page-heading"><div><p class="eyebrow" id="eyebrow">TU ESPACIO DE ESTUDIO</p><h1 id="page-title">Lambda</h1></div><span class="heading-mark" aria-hidden="true"><i data-lucide="book-open"></i></span></div>
       <form id="search-form" role="search">
         <div class="search-line"><i data-lucide="search"></i><input id="query" type="search" aria-label="Buscar material" placeholder="Buscar por título, materia o tema…"><button class="primary" type="submit">Buscar <i data-lucide="arrow-right"></i></button></div>
         <div class="filters">
@@ -34,7 +35,7 @@
       </form>
       <nav id="categories" class="categories" aria-label="Tipo de material"></nav>
       <div id="library-content" aria-live="polite"></div>
-      <footer>Biblioteca Virtual ITBA <span>Proyecto estudiantil independiente</span></footer>
+      <footer>Lambda · Biblioteca Virtual ITBA <span>Proyecto estudiantil independiente</span></footer>
     </main>
   </div>
   <dialog id="detail" aria-labelledby="detail-title"><div id="detail-body"></div></dialog>

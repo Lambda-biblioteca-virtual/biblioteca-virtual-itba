@@ -17,11 +17,24 @@ function readList(key) {
   try { const value = JSON.parse(localStorage.getItem(key) || "[]"); return Array.isArray(value) ? value.filter((id) => typeof id === "string") : []; } catch { return []; }
 }
 let saved = readList("itba-saved");
-let downloads = readList("itba-downloads");
+function readDownloads() {
+  try {
+    const entries = JSON.parse(localStorage.getItem("itba-downloads") || "[]");
+    if (!Array.isArray(entries)) return [];
+    // Older browser histories stored IDs without timestamps.
+    const seen = new Set();
+    return entries.map((entry) => typeof entry === "string" ? { id: entry, downloadedAt: null } : entry)
+      .filter((entry) => entry && typeof entry.id === "string")
+      .map((entry) => ({ id: entry.id, downloadedAt: Number.isFinite(entry.downloadedAt) && entry.downloadedAt > 0 ? entry.downloadedAt : null }))
+      .sort((a, b) => (b.downloadedAt || 0) - (a.downloadedAt || 0))
+      .filter((entry) => { if (seen.has(entry.id)) return false; seen.add(entry.id); return true; });
+  } catch { return []; }
+}
+let downloads = readDownloads();
 let view = "inicio", category = "", selected = null, lastTrigger = null;
 const blankFilters = () => ({ query: "", career: "", year: "", term: "", subject: "" });
 let applied = blankFilters();
-const types = [["", "Todo", "grid-2x2"], ["Resumen", "Resúmenes", "notebook-pen"], ["Parcial", "Parciales", "file-check-2"], ["Bibliografia", "Bibliografía", "book-open"], ["Guia", "Guías", "list-checks"], ["TP", "Trabajos prácticos", "files"]];
+const types = [["", "Todos", "grid-2x2"], ["Resumen", "Resúmenes", "notebook-pen"], ["Parcial", "Parciales", "file-check-2"], ["Bibliografia", "Bibliografía", "book-open"], ["Guia", "Guías", "list-checks"], ["TP", "Trabajos prácticos", "files"]];
 function safeURL(value) {
   if (!value || value === "#") return null;
   try { const url = new URL(value, location.href); return ["https:", "http:", "file:"].includes(url.protocol) ? url.href : null; } catch { return null; }
@@ -66,15 +79,26 @@ function cards(items) {
 function empty(title, message, name = "book-open", reset = false) {
   return `<div class="empty"><div class="empty-icon">${icon(name)}</div><div><h3>${title}</h3><p>${message}</p>${reset ? `<button class="text-button" data-clear>Limpiar búsqueda ${icon("arrow-right")}</button>` : ""}</div></div>`;
 }
-function shelf(title, items, emptyTitle, message, type = null) {
-  return `<section class="shelf"><div class="shelf-heading"><h2>${title}</h2><button class="text-button" data-category="${type || ""}" data-all>Ver todo ${icon("arrow-up-right")}</button></div>${items.length ? cards(items.slice(0,6)) : empty(emptyTitle, message)}</section>`;
+function downloadRows(items) {
+  const dateFormat = new Intl.DateTimeFormat("es-AR", { dateStyle: "medium", timeStyle: "short" });
+  return `<ol class="download-list">${items.map((material) => {
+    const entry = downloads.find((item) => item.id === material.id);
+    const date = entry.downloadedAt ? `<time datetime="${new Date(entry.downloadedAt).toISOString()}">${dateFormat.format(entry.downloadedAt)}</time>` : "Descarga anterior";
+    return `<li class="download-row"><span class="download-file-icon">${icon("file-text")}</span><button class="download-info" data-open="${escapeHTML(material.id)}"><strong>${escapeHTML(material.title)}</strong><span>${escapeHTML(material.subject)} · ${escapeHTML(material.type)}</span></button><span class="download-date">${date}</span><button class="icon-button" data-download="${escapeHTML(material.id)}" title="Volver a descargar" aria-label="Volver a descargar ${escapeHTML(material.title)}">${icon("download")}</button></li>`;
+  }).join("")}</ol>`;
+}
+function home() {
+  return `<section class="home-intro" aria-labelledby="home-title"><img class="home-image" src="assets/lambda-study.jpg" alt="Ilustración de una mesa compartida con apuntes, libros de matemática y una computadora" width="2172" height="724" fetchpriority="high"><div class="home-story"><p class="eyebrow">UN LUGAR PARA TODO ESE MATERIAL</p><h1 id="home-title">Lambda</h1><p>Somos un grupo de tres estudiantes de Ingeniería Informática del ITBA. Antes de cada examen nos pasaba lo mismo: buscábamos parciales viejos por todos lados, tratábamos de conseguir un buen resumen y de encontrar la bibliografía de la materia.</p><p>Entre carpetas, chats y enlaces sueltos, nos dimos cuenta de que estaría bueno tener todo en un solo lugar. Así nació Lambda: una biblioteca para encontrar y compartir el material que nos acompaña durante la carrera.</p><p>Menos tiempo buscando. Más tiempo para estudiar.</p><a class="primary home-cta" href="#buscar">Explorar la biblioteca ${icon("arrow-right")}</a></div></section>`;
 }
 function render() {
   document.querySelectorAll("[data-view]").forEach((link) => { link.classList.toggle("active", link.dataset.view === view); if (link.dataset.view === view) link.setAttribute("aria-current", "page"); else link.removeAttribute("aria-current"); });
   $("saved-count").textContent = materials.filter((material) => saved.includes(material.id)).length;
   const titles = { inicio: ["TU ESPACIO DE ESTUDIO", "¿Qué estudiamos hoy?"], buscar: ["ENCONTRÁ TU MATERIAL", "Buscar en la biblioteca"], descargas: ["TU ACTIVIDAD", "Descargas"], guardados: ["TU BIBLIOTECA PERSONAL", "Guardados"] };
   $("eyebrow").textContent = titles[view][0]; $("page-title").textContent = titles[view][1];
-  document.title = `${view === "inicio" ? "Inicio" : titles[view][1]} | Biblioteca ITBA`;
+  document.title = `${view === "inicio" ? "Inicio" : titles[view][1]} | Lambda`;
+  $("search-form").hidden = view !== "buscar";
+  $("page-heading").hidden = view === "inicio";
+  $("categories").hidden = view === "inicio";
   $("categories").innerHTML = types.map(([value,label,name]) => `<button class="${category === value ? "active" : ""}" data-category="${value}" aria-pressed="${category === value}">${icon(name)}${label}</button>`).join("");
   const results = materials.filter((material) => {
     const career = data.careers.find((item) => item.id === material.careerId);
@@ -82,21 +106,19 @@ function render() {
     return (!category || normalize(material.type) === normalize(category)) && (!applied.query || haystack.includes(normalize(applied.query)))
       && (!applied.career || applied.career === material.careerId) && (!applied.year || applied.year === String(material.year))
       && (!applied.term || applied.term === String(material.term)) && (!applied.subject || applied.subject === material.subject)
-      && (view !== "guardados" || saved.includes(material.id)) && (view !== "descargas" || downloads.includes(material.id));
+      && (view !== "guardados" || saved.includes(material.id)) && (view !== "descargas" || downloads.some((entry) => entry.id === material.id));
   });
-  if (view === "descargas") results.sort((a,b) => downloads.indexOf(a.id) - downloads.indexOf(b.id));
+  if (view === "descargas") results.sort((a,b) => downloads.findIndex((entry) => entry.id === a.id) - downloads.findIndex((entry) => entry.id === b.id));
   const filtered = Object.values(applied).some(Boolean) || category;
-  if (view === "inicio" && !filtered) {
-    $("library-content").innerHTML = shelf("Recién agregados", [...results].reverse(), "La biblioteca está por empezar", "Todavía no hay materiales publicados.")
-      + `<div class="section-pair">${shelf("Resúmenes", results.filter((item) => item.type === "Resumen"), "Ideas en pocas páginas", "Aún no hay resúmenes disponibles.", "Resumen")}${shelf("Parciales", results.filter((item) => item.type === "Parcial"), "Tu próximo parcial", "Aún no hay parciales disponibles.", "Parcial")}</div>`
-      + shelf("Bibliografía", results.filter((item) => normalize(item.type) === "bibliografia"), "Lecturas para profundizar", "Aún no hay bibliografía disponible.", "Bibliografia");
+  if (view === "inicio") {
+    $("library-content").innerHTML = home();
   } else {
     const title = view === "guardados" ? "Tus materiales guardados" : view === "descargas" ? "Historial de descargas" : "Resultados de búsqueda";
     let message = "Probá con otra materia o con menos filtros.", emptyTitle = "No encontramos materiales";
     if (!filtered && view === "guardados") { emptyTitle = "Tus favoritos, en un lugar"; message = "Todavía no guardaste materiales en este navegador."; }
     if (!filtered && view === "descargas") { emptyTitle = "Todavía no hay descargas"; message = "Tu historial de descargas en este navegador está vacío."; }
     if (!materials.length && view === "buscar") message = "Todavía no hay materiales publicados en la biblioteca.";
-    $("library-content").innerHTML = `<section class="shelf"><div class="shelf-heading"><h2>${title}</h2><span>${results.length} archivos</span></div>${results.length ? cards(results) : empty(emptyTitle, message, view === "guardados" ? "bookmark" : view === "descargas" ? "download" : "search", Boolean(filtered))}</section>`;
+    $("library-content").innerHTML = `<section class="shelf"><div class="shelf-heading"><h2>${title}</h2><span>${results.length} ${results.length === 1 ? "archivo" : "archivos"}</span></div>${results.length ? (view === "descargas" ? downloadRows(results) : cards(results)) : empty(emptyTitle, message, view === "guardados" ? "bookmark" : view === "descargas" ? "download" : "search", Boolean(filtered))}</section>`;
   }
   icons();
 }
@@ -130,15 +152,17 @@ function renderDetail() {
   icons();
 }
 async function downloadMaterial(button) {
-  const material = selected; button.disabled = true;
+  const material = button.dataset.download ? materials.find((item) => item.id === button.dataset.download) : selected;
+  if (!material) return;
+  button.disabled = true;
   try {
     const response = await fetch(safeURL(material.url));
     if (!response.ok) throw new Error("Download failed");
     const blob = await response.blob(); const url = URL.createObjectURL(blob);
     const link = document.createElement("a"); link.href = url;
-    link.download = new URL(safeURL(material.url)).pathname.split("/").pop() || material.title;
+    link.download = decodeURIComponent(new URL(safeURL(material.url)).pathname.split("/").pop()) || material.title;
     document.body.append(link); link.click(); link.remove(); setTimeout(() => URL.revokeObjectURL(url), 60000);
-    downloads = [material.id, ...downloads.filter((id) => id !== material.id)]; persist("itba-downloads", downloads); render(); notify("Descarga iniciada.");
+    downloads = [{ id: material.id, downloadedAt: Date.now() }, ...downloads.filter((entry) => entry.id !== material.id)]; persist("itba-downloads", downloads); render(); notify("Descarga iniciada.");
   } catch { notify("No pudimos descargarlo. Abrí el archivo para descargarlo desde su sitio de origen."); }
   finally { button.disabled = false; }
 }

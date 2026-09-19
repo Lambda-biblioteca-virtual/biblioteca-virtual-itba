@@ -209,15 +209,15 @@ window.BIBLIOTECA_DATA = {
   ],
   materials: [
     {
-      id: "demo-analisis-1",
+      id: "informatica-analisis-2-parcial-2025-1c-b",
       careerId: "informatica",
       year: 1,
-      term: 1,
-      subject: "Analisis Matematico I",
+      term: 2,
+      subject: "Analisis Matematico II",
       type: "Parcial",
-      title: "Ejemplo de ficha de material",
-      url: "#",
-      status: "Pendiente de archivo"
+      title: "Primer parcial · 2025 · 1C · Tema B",
+      url: "Parciales/Primer Parcial - 2025 - 1C - B.pdf",
+      status: "Abrir material"
     }
   ]
 };

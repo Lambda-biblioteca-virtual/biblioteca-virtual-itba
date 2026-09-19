@@ -1,4 +1,4 @@
-# Biblioteca Virtual ITBA
+# Lambda · Biblioteca Virtual ITBA
 
 Pagina web para organizar bibliografia, parciales viejos, resumenes, guias y
 otros materiales de estudio para estudiantes del ITBA.
@@ -18,12 +18,16 @@ Se utilizan para completar los filtros; no se muestran como materiales.
 
 ## Navegacion
 
-Inicio muestra los materiales recientes y las secciones por tipo. Buscar
+Inicio presenta la historia de Lambda con una ilustracion original. Buscar
 permite combinar carrera, año, cuatrimestre, materia y texto, y aplicar la
 seleccion con el boton Buscar. Las categorias filtran por tipo de material.
 
 Cada archivo abre un panel con Abrir, Descargar, Guardar y Reportar.
-Guardados y el historial de descargas se conservan en este navegador.
+Guardados muestra solo favoritos, con categorias y sin buscador. Descargas
+muestra una lista por fecha de ultima descarga, de mas reciente a mas antigua,
+y permite descargar otra vez. Cada archivo aparece una sola vez en la lista.
+Guardados y el historial se conservan en este navegador; no se sincronizan
+entre dispositivos. El historial anterior se conserva sin inventar fechas.
 Reportar abre una incidencia en GitHub y requiere una cuenta de GitHub.
 Las descargas externas dependen de los permisos del sitio de origen; cuando
 no se permiten, se puede abrir el archivo en su sitio.
