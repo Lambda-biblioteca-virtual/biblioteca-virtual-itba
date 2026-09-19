@@ -1,120 +1,46 @@
 <!doctype html>
 <html lang="es">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Biblioteca Virtual ITBA</title>
-    <link rel="stylesheet" href="styles.css" />
-  </head>
-  <body>
-    <header class="topbar">
-      <a class="brand" href="#inicio" aria-label="Biblioteca Virtual ITBA">
-        <span class="brand-mark">ITBA</span>
-        <span>Biblioteca Virtual</span>
-      </a>
-      <nav class="nav" aria-label="Principal">
-        <a href="#explorar">Explorar</a>
-        <a href="#materiales">Materiales</a>
-        <a href="admin.html">Admin</a>
-      </nav>
-    </header>
-
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f7f2e7">
+  <title>Biblioteca Virtual ITBA</title>
+  <link rel="stylesheet" href="library.css">
+</head>
+<body>
+  <aside class="sidebar">
+    <a class="brand" href="#inicio" aria-label="Biblioteca ITBA, inicio">ITBA<span>biblioteca</span></a>
+    <nav aria-label="Navegación principal">
+      <a href="#inicio" data-view="inicio"><i data-lucide="house"></i><span>Inicio</span></a>
+      <a href="#buscar" data-view="buscar"><i data-lucide="search"></i><span>Buscar</span></a>
+      <a href="#descargas" data-view="descargas"><i data-lucide="download"></i><span>Descargas</span></a>
+      <a href="#guardados" data-view="guardados"><i data-lucide="bookmark"></i><span>Guardados</span><small id="saved-count">0</small></a>
+    </nav>
+    <div class="sidebar-bottom"><a href="admin.html"><i data-lucide="settings-2"></i><span>Administrar</span></a><p>Hecha para compartir.<br>Y seguir aprendiendo.</p></div>
+  </aside>
+  <div class="workspace">
+    <header class="topbar"><span>Biblioteca Virtual <strong>ITBA</strong></span><span class="community"><i data-lucide="users-round"></i>De estudiantes, para estudiantes</span></header>
     <main>
-      <section class="hero" id="inicio">
-        <div class="hero-content">
-          <p class="eyebrow">Bibliografia, parciales, resumenes y guias</p>
-          <h1>Una biblioteca ordenada por carrera, año, cuatrimestre y materia.</h1>
-          <p class="intro">
-            Pensada para que cualquier estudiante del ITBA encuentre rapido el
-            material que necesita, sin perderse entre carpetas sueltas.
-          </p>
-          <form class="hero-search" role="search">
-            <input id="global-search" type="search" placeholder="Buscar por materia, carrera o tipo de material" />
-            <button type="button" id="clear-search">Limpiar</button>
-          </form>
+      <div class="page-heading"><div><p class="eyebrow" id="eyebrow">TU ESPACIO DE ESTUDIO</p><h1 id="page-title">¿Qué estudiamos hoy?</h1></div><span class="heading-mark" aria-hidden="true"><i data-lucide="book-open"></i></span></div>
+      <form id="search-form" role="search">
+        <div class="search-line"><i data-lucide="search"></i><input id="query" type="search" aria-label="Buscar material" placeholder="Buscar por título, materia o tema…"><button class="primary" type="submit">Buscar <i data-lucide="arrow-right"></i></button></div>
+        <div class="filters">
+          <label>Carrera<select id="career"></select></label>
+          <label>Año<select id="year"></select></label>
+          <label>Cuatrimestre<select id="term"></select></label>
+          <label>Materia<select id="subject"></select></label>
+          <button class="icon-button reset" type="reset" title="Limpiar filtros" aria-label="Limpiar filtros"><i data-lucide="rotate-ccw"></i></button>
         </div>
-      </section>
-
-      <section class="explorer" id="explorar" aria-labelledby="explorer-title">
-        <div class="section-inner">
-          <div class="section-heading">
-            <p class="eyebrow dark">Explorador academico</p>
-            <h2 id="explorer-title">Elegi una carrera para ver su plan.</h2>
-            <p>
-              Esta primera carga sale de los planes de estudio que agregaste en
-              la carpeta Carreras. La estructura ya queda lista para ir sumando
-              archivos reales materia por materia.
-            </p>
-          </div>
-
-          <div class="layout">
-            <aside class="career-list" aria-label="Carreras">
-              <div id="career-buttons"></div>
-            </aside>
-            <section class="plan-panel" aria-live="polite">
-              <div class="plan-title-row">
-                <div>
-                  <p class="panel-label">Carrera seleccionada</p>
-                  <h3 id="selected-career">Ingenieria Informatica</h3>
-                </div>
-                <a id="plan-link" class="text-link" href="#" target="_blank" rel="noreferrer">Ver plan original</a>
-              </div>
-              <div id="curriculum" class="curriculum"></div>
-            </section>
-          </div>
-        </div>
-      </section>
-
-      <section class="materials-section" id="materiales" aria-labelledby="materials-title">
-        <div class="section-inner">
-          <div class="section-heading">
-            <p class="eyebrow dark">Biblioteca</p>
-            <h2 id="materials-title">Materiales disponibles</h2>
-            <p>
-              Cuando subamos archivos reales, van a aparecer aca filtrados por
-              carrera, año, cuatrimestre, materia y tipo.
-            </p>
-          </div>
-
-          <div class="filters" aria-label="Filtros de materiales">
-            <label>
-              Carrera
-              <select id="filter-career"></select>
-            </label>
-            <label>
-              Año
-              <select id="filter-year">
-                <option value="">Todos</option>
-                <option value="1">1</option>
-                <option value="2">2</option>
-                <option value="3">3</option>
-                <option value="4">4</option>
-                <option value="5">5</option>
-              </select>
-            </label>
-            <label>
-              Tipo
-              <select id="filter-type">
-                <option value="">Todos</option>
-                <option>Parcial</option>
-                <option>Resumen</option>
-                <option>Bibliografia</option>
-                <option>Guia</option>
-                <option>TP</option>
-              </select>
-            </label>
-          </div>
-
-          <div id="materials-list" class="materials-list"></div>
-        </div>
-      </section>
+      </form>
+      <nav id="categories" class="categories" aria-label="Tipo de material"></nav>
+      <div id="library-content" aria-live="polite"></div>
+      <footer>Biblioteca Virtual ITBA <span>Proyecto estudiantil independiente</span></footer>
     </main>
-
-    <footer class="footer">
-      <p>Proyecto estudiantil independiente. Cuidemos los derechos de autor y los datos personales.</p>
-    </footer>
-
-    <script src="data.js"></script>
-    <script src="app.js"></script>
-  </body>
+  </div>
+  <dialog id="detail" aria-labelledby="detail-title"><div id="detail-body"></div></dialog>
+  <p id="toast" role="status" hidden></p>
+  <script src="lucide.min.js"></script>
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
 </html>

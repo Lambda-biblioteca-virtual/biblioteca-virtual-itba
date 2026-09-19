@@ -14,6 +14,27 @@ La estructura principal es:
 5. Material
 
 Los planes de estudio originales viven en la carpeta `Carreras`.
+Se utilizan para completar los filtros; no se muestran como materiales.
+
+## Navegacion
+
+Inicio muestra los materiales recientes y las secciones por tipo. Buscar
+permite combinar carrera, año, cuatrimestre, materia y texto, y aplicar la
+seleccion con el boton Buscar. Las categorias filtran por tipo de material.
+
+Cada archivo abre un panel con Abrir, Descargar, Guardar y Reportar.
+Guardados y el historial de descargas se conservan en este navegador.
+Reportar abre una incidencia en GitHub y requiere una cuenta de GitHub.
+Las descargas externas dependen de los permisos del sitio de origen; cuando
+no se permiten, se puede abrir el archivo en su sitio.
+
+Los materiales sin enlace real no se muestran. El campo opcional `cover`
+permite usar una imagen de portada; sin imagen se muestra una cubierta con
+la materia y el tipo. No se publican archivos de muestra como material real.
+
+Los iconos locales de Lucide (0.468.0) incluyen su licencia en
+`lucide-LICENSE.txt`. La interfaz publica usa `library.css`; `styles.css` conserva
+los estilos del panel administrador.
 
 ## Admin
 
