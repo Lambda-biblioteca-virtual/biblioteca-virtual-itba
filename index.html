@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#f7f2e7">
   <title>Lambda | Biblioteca Virtual ITBA</title>
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+  <style>html:not(.auth-ready) body{visibility:hidden}</style>
   <link rel="stylesheet" href="library.css">
   <link rel="stylesheet" href="lambda.css">
 </head>
@@ -20,7 +22,7 @@
     <div class="sidebar-bottom"><a href="admin.html"><i data-lucide="settings-2"></i><span>Administrar</span></a><p>Hecha para compartir.<br>Y seguir aprendiendo.</p></div>
   </aside>
   <div class="workspace">
-    <header class="topbar"><span>Lambda <strong>Biblioteca Virtual ITBA</strong></span></header>
+    <header class="topbar"><span>Lambda <strong>Biblioteca Virtual ITBA</strong></span><button class="icon-button" id="logout" title="Cerrar sesión" aria-label="Cerrar sesión"><i data-lucide="log-out"></i></button></header>
     <main>
       <div class="page-heading" id="page-heading"><div><p class="eyebrow" id="eyebrow">TU ESPACIO DE ESTUDIO</p><h1 id="page-title">Lambda</h1></div><span class="heading-mark" aria-hidden="true"><i data-lucide="book-open"></i></span></div>
       <form id="search-form" role="search">
@@ -41,10 +43,11 @@
   <dialog id="detail" aria-labelledby="detail-title"><div id="detail-body"></div></dialog>
   <p id="toast" role="status" hidden></p>
   <script src="lucide.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.116.0"></script>
   <script src="supabase-config.js"></script>
   <script src="supabase-client.js"></script>
+  <script src="auth-guard.js"></script>
   <script src="data.js"></script>
-  <script src="app.js?v=supabase-1"></script>
+  <script src="app.js?v=auth-1"></script>
 </body>
 </html>

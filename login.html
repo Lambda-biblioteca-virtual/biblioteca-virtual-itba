@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f7f2e7">
+  <meta name="referrer" content="no-referrer">
+  <title>Ingresar | Lambda</title>
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+  <link rel="stylesheet" href="library.css">
+  <link rel="stylesheet" href="auth.css">
+</head>
+<body class="auth-page">
+  <main class="auth-main">
+    <a class="auth-brand" href="login.html" aria-label="Lambda, biblioteca virtual ITBA">
+      <span class="auth-brand-line"><b>λ</b><strong>Lambda</strong></span>
+      <span class="auth-university">ITBA</span><span class="auth-caption">Biblioteca virtual</span>
+    </a>
+    <section class="auth-panel" aria-labelledby="auth-title">
+      <div class="auth-tabs" role="group" aria-label="Acceso a tu cuenta">
+        <button type="button" data-mode="login" aria-pressed="true">Iniciar sesión</button>
+        <button type="button" data-mode="signup" aria-pressed="false">Crear cuenta</button>
+      </div>
+      <h1 id="auth-title">Qué bueno verte de nuevo.</h1>
+      <p id="auth-description">Entrá con tu correo del ITBA.</p>
+      <form id="auth-form">
+        <label id="email-field" for="email">Correo del ITBA
+          <input id="email" name="email" type="email" autocomplete="username" placeholder="tu.nombre@itba.edu.ar" required maxlength="254">
+        </label>
+        <div id="password-field">
+          <label for="password">Contraseña</label>
+          <div class="password-input"><input id="password" name="password" type="password" autocomplete="current-password" required maxlength="128"><button id="toggle-password" type="button" aria-label="Mostrar contraseña" title="Mostrar contraseña" aria-pressed="false"><i data-lucide="eye"></i></button></div>
+          <small id="password-hint" hidden>Usá al menos 8 caracteres.</small>
+        </div>
+        <label id="confirm-field" for="confirm-password" hidden>Repetir contraseña
+          <input id="confirm-password" type="password" autocomplete="new-password" maxlength="128" disabled>
+        </label>
+        <p id="auth-message" role="status" aria-live="polite" hidden></p>
+        <button class="primary auth-submit" type="submit" id="auth-submit">Iniciar sesión <i data-lucide="arrow-right"></i></button>
+      </form>
+      <button class="auth-link" type="button" id="forgot-password">Olvidé mi contraseña</button>
+      <button class="auth-link" type="button" id="resend" hidden>Reenviar correo de confirmación</button>
+      <button class="auth-link" type="button" id="back-login" hidden>Volver a iniciar sesión</button>
+    </section>
+    <p class="auth-footer">Lambda · Un lugar para seguir aprendiendo.</p>
+  </main>
+  <script src="lucide.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.116.0"></script>
+  <script src="supabase-config.js"></script>
+  <script src="supabase-client.js"></script>
+  <script src="auth.js"></script>
+</body>
+</html>

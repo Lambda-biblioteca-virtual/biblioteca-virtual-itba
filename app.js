@@ -17,10 +17,11 @@ function fitCovers() {
 function readList(key) {
   try { const value = JSON.parse(localStorage.getItem(key) || "[]"); return Array.isArray(value) ? value.filter((id) => typeof id === "string") : []; } catch { return []; }
 }
-let saved = readList("itba-saved");
+let storagePrefix = "itba";
+let saved = [];
 function readDownloads() {
   try {
-    const entries = JSON.parse(localStorage.getItem("itba-downloads") || "[]");
+    const entries = JSON.parse(localStorage.getItem(`${storagePrefix}-downloads`) || "[]");
     if (!Array.isArray(entries)) return [];
     // Older browser histories stored IDs without timestamps.
     const seen = new Set();
@@ -31,7 +32,7 @@ function readDownloads() {
       .filter((entry) => { if (seen.has(entry.id)) return false; seen.add(entry.id); return true; });
   } catch { return []; }
 }
-let downloads = readDownloads();
+let downloads = [];
 let view = "inicio", category = "", selected = null, lastTrigger = null;
 const blankFilters = () => ({ query: "", career: "", year: "", term: "", subject: "" });
 let applied = blankFilters();
@@ -67,6 +68,7 @@ function notify(message) {
   clearTimeout(notify.timer); notify.timer = setTimeout(() => { $("toast").hidden = true; }, 4200);
 }
 function persist(key, list) {
+  key = key.replace(/^itba-/, `${storagePrefix}-`);
   try { localStorage.setItem(key, JSON.stringify(list)); } catch { notify("Este navegador no permite guardar cambios. Se conservarán mientras la página esté abierta."); }
 }
 function cover(material) {
@@ -196,8 +198,14 @@ $("detail").addEventListener("close", () => { if (lastTrigger?.isConnected) last
 window.addEventListener("hashchange", route);
 new ResizeObserver(() => requestAnimationFrame(fitCovers)).observe(document.querySelector("main"));
 async function init() {
+  const user = await window.LAMBDA_AUTH_READY;
+  if (!user) return;
+  storagePrefix = `lambda-${user.id}`;
+  saved = readList(`${storagePrefix}-saved`);
+  downloads = readDownloads();
   options("career", data.careers.map((career) => [career.id, career.name]), "Todas las carreras");
   fillYears(); route();
+  document.documentElement.classList.add('auth-ready');
   if (window.LAMBDA_SUPABASE?.loadMaterials) {
     try {
       const remoteMaterials = await window.LAMBDA_SUPABASE.loadMaterials();
