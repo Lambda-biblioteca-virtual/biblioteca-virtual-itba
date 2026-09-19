@@ -40,11 +40,10 @@ function safeURL(value) {
   if (!value || value === "#") return null;
   try { const url = new URL(value, location.href); return ["https:", "http:", "file:"].includes(url.protocol) ? url.href : null; } catch { return null; }
 }
-const materials = data.materials.filter((item) => safeURL(item.url));
+let materials = data.materials.filter((item) => safeURL(item.url));
 function options(id, values, placeholder) {
   $(id).replaceChildren(new Option(placeholder, ""), ...values.map(([value, label]) => new Option(label, value)));
 }
-options("career", data.careers.map((career) => [career.id, career.name]), "Todas las carreras");
 function fillYears() {
   const careers = data.careers.filter((career) => !$("career").value || career.id === $("career").value);
   const years = [...new Set(careers.flatMap((career) => career.years.map((year) => year.year)))].sort((a,b) => a-b);
@@ -146,7 +145,7 @@ function showDetails(id, trigger) {
 function renderDetail() {
   const material = selected;
   const career = data.careers.find((item) => item.id === material.careerId);
-  const report = new URL("https://github.com/gaelstella/biblioteca-virtual-itba/issues/new");
+  const report = new URL("https://github.com/lambda-biblioteca-virtual/biblioteca-virtual-itba/issues/new");
   report.searchParams.set("title", `Reporte: ${material.title}`);
   report.searchParams.set("body", `Material: ${material.title}\nID: ${material.id}\n\nMotivo del reporte:\n`);
   $("detail-body").innerHTML = `<div class="detail-heading"><span>DETALLE DEL MATERIAL</span><button class="icon-button" data-close aria-label="Cerrar detalle" title="Cerrar">${icon("x")}</button></div><div class="detail-cover">${cover(material)}</div><h2 class="detail-title" id="detail-title">${escapeHTML(material.title)}</h2><p class="detail-subject">${escapeHTML(material.subject)}</p><a class="primary open-file" href="${escapeHTML(safeURL(material.url))}" target="_blank" rel="noopener">${icon("external-link")}Abrir archivo</a><div class="detail-actions"><button data-download>${icon("download")}Descargar</button><button data-save="${escapeHTML(material.id)}" class="${saved.includes(material.id) ? "saved" : ""}" aria-pressed="${saved.includes(material.id)}">${icon("bookmark")}${saved.includes(material.id) ? "Guardado" : "Guardar"}</button><a href="${escapeHTML(report.href)}" target="_blank" rel="noopener">${icon("flag")}Reportar</a></div><dl><div><dt>Tipo</dt><dd>${escapeHTML(material.type)}</dd></div><div><dt>Carrera</dt><dd>${escapeHTML(career?.name || "")}</dd></div><div><dt>Año</dt><dd>${escapeHTML(material.year)}° año</dd></div><div><dt>Cuatrimestre</dt><dd>${escapeHTML(material.term)}° cuatrimestre</dd></div><div><dt>Materia</dt><dd>${escapeHTML(material.subject)}</dd></div></dl><p class="detail-note">Guardados e historial se conservan en este navegador. Los reportes se envían desde tu cuenta de GitHub.</p>`;
@@ -196,4 +195,19 @@ $("detail").addEventListener("click", (event) => { if (event.target === $("detai
 $("detail").addEventListener("close", () => { if (lastTrigger?.isConnected) lastTrigger.focus(); else document.querySelector(".sidebar .active")?.focus(); });
 window.addEventListener("hashchange", route);
 new ResizeObserver(() => requestAnimationFrame(fitCovers)).observe(document.querySelector("main"));
-fillYears(); route();
+async function init() {
+  options("career", data.careers.map((career) => [career.id, career.name]), "Todas las carreras");
+  fillYears(); route();
+  if (window.LAMBDA_SUPABASE?.loadMaterials) {
+    try {
+      const remoteMaterials = await window.LAMBDA_SUPABASE.loadMaterials();
+      if (remoteMaterials.length) {
+        materials = remoteMaterials.filter((item) => safeURL(item.url));
+        render();
+      }
+    } catch (error) {
+      console.warn("Supabase materials sync skipped.", error);
+    }
+  }
+}
+init();

@@ -1,0 +1,4 @@
+window.LAMBDA_SUPABASE_CONFIG = {
+  url: "https://nlxsidqaqtslaoyuaevc.supabase.co",
+  anonKey: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5seHNpZHFhcXRzbGFveXVhZXZjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk4MjQ3MjMsImV4cCI6MjEwNTQwMDcyM30.AI5OXylhfV25HiT2ygRDhslmXnPnXtBZKAexJRlESCg"
+};
