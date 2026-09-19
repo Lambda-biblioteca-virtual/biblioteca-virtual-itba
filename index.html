@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Biblioteca Virtual ITBA</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <a class="brand" href="#inicio">Biblioteca Virtual ITBA</a>
+      <nav class="nav" aria-label="Principal">
+        <a href="#materiales">Materiales</a>
+        <a href="#subir">Subir</a>
+        <a href="#criterios">Criterios</a>
+      </nav>
+    </header>
+
+    <main>
+      <section class="hero" id="inicio">
+        <div class="hero-content">
+          <p class="eyebrow">Apuntes, parciales y recursos por materia</p>
+          <h1>Todo el material de estudio, organizado para estudiantes del ITBA.</h1>
+          <p class="intro">
+            Un espacio colaborativo para encontrar bibliografia, parciales viejos,
+            resumenes, guias y recursos utiles sin importar la carrera.
+          </p>
+          <div class="hero-actions">
+            <a class="button primary" href="#materiales">Explorar materiales</a>
+            <a class="button secondary" href="#subir">Aportar un recurso</a>
+          </div>
+        </div>
+      </section>
+
+      <section class="search-section" aria-labelledby="busqueda-title">
+        <div class="section-inner">
+          <h2 id="busqueda-title">Buscar recursos</h2>
+          <form class="search-panel">
+            <label>
+              Carrera
+              <select>
+                <option>Todas</option>
+                <option>Ingenieria Informatica</option>
+                <option>Ingenieria Industrial</option>
+                <option>Ingenieria Mecanica</option>
+                <option>Administracion y Sistemas</option>
+              </select>
+            </label>
+            <label>
+              Materia
+              <input type="search" placeholder="Ej: Analisis Matematico I" />
+            </label>
+            <label>
+              Tipo
+              <select>
+                <option>Todos</option>
+                <option>Parcial</option>
+                <option>Resumen</option>
+                <option>Bibliografia</option>
+                <option>Guia</option>
+              </select>
+            </label>
+            <button type="button">Buscar</button>
+          </form>
+        </div>
+      </section>
+
+      <section class="materials" id="materiales" aria-labelledby="materials-title">
+        <div class="section-inner">
+          <div class="section-heading">
+            <h2 id="materials-title">Materiales destacados</h2>
+            <p>Ejemplos iniciales para mostrar como podria organizarse la biblioteca.</p>
+          </div>
+          <div class="resource-grid">
+            <article class="resource-card">
+              <span class="tag">Parcial</span>
+              <h3>Analisis Matematico I</h3>
+              <p>Parciales resueltos y modelos de practica por cuatrimestre.</p>
+              <a href="#">Ver recursos</a>
+            </article>
+            <article class="resource-card">
+              <span class="tag">Resumen</span>
+              <h3>Algebra Lineal</h3>
+              <p>Resumenes teoricos, ejercicios tipo y guias comentadas.</p>
+              <a href="#">Ver recursos</a>
+            </article>
+            <article class="resource-card">
+              <span class="tag">Bibliografia</span>
+              <h3>Fisica I</h3>
+              <p>Listado de libros recomendados, capitulos y material complementario.</p>
+              <a href="#">Ver recursos</a>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="upload" id="subir" aria-labelledby="upload-title">
+        <div class="section-inner split">
+          <div>
+            <h2 id="upload-title">Aportar material</h2>
+            <p>
+              En la primera version, podemos recibir aportes mediante un formulario
+              externo. Mas adelante se puede sumar login, moderacion y carga directa.
+            </p>
+          </div>
+          <a class="button primary" href="mailto:tu-email@ejemplo.com">Enviar material</a>
+        </div>
+      </section>
+
+      <section class="criteria" id="criterios" aria-labelledby="criteria-title">
+        <div class="section-inner">
+          <h2 id="criteria-title">Criterios para cuidar la biblioteca</h2>
+          <ul class="criteria-list">
+            <li>Subir archivos claros, legibles y bien nombrados.</li>
+            <li>Indicar materia, carrera, profesor o catedra cuando aplique.</li>
+            <li>No publicar contenido privado, soluciones robadas ni datos personales.</li>
+            <li>Respetar derechos de autor y priorizar enlaces oficiales cuando existan.</li>
+          </ul>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <p>Proyecto estudiantil independiente.</p>
+    </footer>
+  </body>
+</html>
