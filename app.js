@@ -2,6 +2,7 @@ const data = window.BIBLIOTECA_DATA;
 const $ = (id) => document.getElementById(id);
 const escapeHTML = (value) => String(value ?? "").replace(/[&<>"']/g, (char) => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[char]));
 const normalize = (value) => String(value).normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+const searchWords = (value) => normalize(value).match(/[a-z0-9]+/g)?.map((word) => ({ i: "1", ii: "2", iii: "3", iv: "4", v: "5", vi: "6", vii: "7", viii: "8", ix: "9", x: "10" }[word] || word)) || [];
 const icon = (name) => `<i data-lucide="${name}"></i>`;
 const icons = () => { window.lucide?.createIcons(); requestAnimationFrame(fitCovers); };
 function fitCovers() {
@@ -102,8 +103,8 @@ function render() {
   $("categories").innerHTML = types.map(([value,label,name]) => `<button class="${category === value ? "active" : ""}" data-category="${value}" aria-pressed="${category === value}">${icon(name)}${label}</button>`).join("");
   const results = materials.filter((material) => {
     const career = data.careers.find((item) => item.id === material.careerId);
-    const haystack = normalize(`${material.title} ${material.subject} ${material.type} ${career?.name || ""}`);
-    return (!category || normalize(material.type) === normalize(category)) && (!applied.query || haystack.includes(normalize(applied.query)))
+    const haystack = searchWords(`${material.title} ${material.subject} ${material.type} ${career?.name || ""}`);
+    return (!category || normalize(material.type) === normalize(category)) && searchWords(applied.query).every((word) => haystack.some((candidate) => /^\d+$/.test(word) ? candidate === word : candidate.includes(word)))
       && (!applied.career || applied.career === material.careerId) && (!applied.year || applied.year === String(material.year))
       && (!applied.term || applied.term === String(material.term)) && (!applied.subject || applied.subject === material.subject)
       && (view !== "guardados" || saved.includes(material.id)) && (view !== "descargas" || downloads.some((entry) => entry.id === material.id));
@@ -156,12 +157,18 @@ async function downloadMaterial(button) {
   if (!material) return;
   button.disabled = true;
   try {
-    const response = await fetch(safeURL(material.url));
-    if (!response.ok) throw new Error("Download failed");
-    const blob = await response.blob(); const url = URL.createObjectURL(blob);
+    const source = new URL(safeURL(material.url));
+    let url = source.href;
+    // Same-origin files can download directly while the click still has user activation.
+    if (source.origin !== location.origin) {
+      const response = await fetch(source.href);
+      if (!response.ok) throw new Error("Download failed");
+      url = URL.createObjectURL(await response.blob());
+    }
     const link = document.createElement("a"); link.href = url;
-    link.download = decodeURIComponent(new URL(safeURL(material.url)).pathname.split("/").pop()) || material.title;
-    document.body.append(link); link.click(); link.remove(); setTimeout(() => URL.revokeObjectURL(url), 60000);
+    link.download = decodeURIComponent(source.pathname.split("/").pop()) || material.title;
+    ($("detail").open ? $("detail") : document.body).append(link); link.click(); link.remove();
+    if (url !== source.href) setTimeout(() => URL.revokeObjectURL(url), 60000);
     downloads = [{ id: material.id, downloadedAt: Date.now() }, ...downloads.filter((entry) => entry.id !== material.id)]; persist("itba-downloads", downloads); render(); notify("Descarga iniciada.");
   } catch { notify("No pudimos descargarlo. Abrí el archivo para descargarlo desde su sitio de origen."); }
   finally { button.disabled = false; }
