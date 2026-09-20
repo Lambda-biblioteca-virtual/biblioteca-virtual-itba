@@ -1,110 +1,61 @@
 <!doctype html>
 <html lang="es">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Admin - Lambda | Biblioteca Virtual ITBA</title>
-    <link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
-    <link rel="stylesheet" href="styles.css" />
-  </head>
-  <body>
-    <header class="topbar">
-      <a class="brand" href="index.html">
-        <span class="brand-mark">λ</span>
-        <span>Lambda · Biblioteca Virtual ITBA</span>
-      </a>
-      <nav class="nav" aria-label="Principal">
-        <a href="index.html#inicio">Inicio</a>
-        <a href="index.html#buscar">Buscar</a>
-        <a href="admin.html">Admin</a>
-      </nav>
-    </header>
-
-    <main>
-      <section class="admin-hero">
-        <div class="section-inner">
-          <p class="eyebrow dark">Panel admin</p>
-          <h1>Cargar materiales para la biblioteca.</h1>
-          <p class="intro dark-copy">
-            En esta version gratis con GitHub Pages, el panel prepara la ficha
-            del material. Para que quede online para todos, despues hay que
-            subir el archivo al repositorio y publicar el cambio.
-          </p>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f7f2e7">
+  <title>Subir material | Lambda</title>
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+  <link rel="stylesheet" href="library.css">
+  <link rel="stylesheet" href="lambda.css">
+  <link rel="stylesheet" href="admin-upload.css">
+</head>
+<body>
+  <aside class="sidebar">
+    <a class="brand" href="index.html#inicio"><span class="brand-line"><b class="brand-symbol">λ</b><strong>Lambda</strong></span><span class="brand-university">ITBA</span><span class="brand-description">Biblioteca virtual</span></a>
+    <nav aria-label="Navegación principal">
+      <a href="index.html#inicio"><i data-lucide="house"></i><span>Inicio</span></a>
+      <a href="index.html#buscar"><i data-lucide="search"></i><span>Buscar</span></a>
+      <a href="index.html#descargas"><i data-lucide="download"></i><span>Descargas</span></a>
+      <a href="index.html#guardados"><i data-lucide="bookmark"></i><span>Guardados</span></a>
+      <a href="admin.html" class="active" aria-current="page" data-admin-link hidden><i data-lucide="upload"></i><span>Subir material</span></a>
+    </nav>
+  </aside>
+  <div class="workspace">
+    <header class="topbar"><span>Lambda <strong>Biblioteca Virtual ITBA</strong></span><button class="icon-button" id="logout" title="Cerrar sesión" aria-label="Cerrar sesión"><i data-lucide="log-out"></i></button></header>
+    <main class="upload-main">
+      <div id="access-status" role="status" class="access-status">Verificando acceso…</div>
+      <section id="upload-panel" hidden aria-labelledby="upload-title">
+        <div class="page-heading"><div><p class="eyebrow">ADMINISTRACIÓN</p><h1 id="upload-title">Subir material</h1></div><a class="text-button" href="index.html#buscar">Ver biblioteca <i data-lucide="arrow-up-right"></i></a></div>
+        <section class="batch-section" aria-labelledby="batch-title">
+          <div class="section-label"><h2 id="batch-title">Clasificación del lote</h2><button id="apply-batch" type="button" class="text-button">Aplicar a pendientes <i data-lucide="check-check"></i></button></div>
+          <div class="classification" id="batch-fields"></div>
+        </section>
+        <div id="drop-zone" class="drop-zone">
+          <i data-lucide="cloud-upload"></i>
+          <h2>Arrastrá tus archivos acá</h2>
+          <button type="button" id="choose-files" class="primary"><i data-lucide="plus"></i>Seleccionar archivos</button>
+          <p>PDF, Word, PowerPoint, Excel, TXT, ZIP e imágenes · Hasta 50 MB por archivo</p>
+          <input type="file" id="file-input" multiple hidden accept=".pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx,.txt,.zip,.jpg,.jpeg,.png,.webp">
         </div>
+        <p id="upload-message" role="status" aria-live="polite" hidden></p>
+        <div class="queue-heading"><h2>Archivos <span id="queue-count">0</span></h2><div class="queue-tools"><button id="clear-done" class="text-button" type="button" hidden>Quitar publicados de la lista</button><button id="clear-queue" class="text-button" type="button" disabled>Quitar pendientes</button></div></div>
+        <p id="queue-empty" class="queue-empty">Todavía no agregaste archivos.</p>
+        <ol id="upload-queue" class="upload-queue"></ol>
+        <div class="publish-bar"><p id="batch-status" role="status">0 archivos para publicar</p><button class="primary" type="button" id="publish" disabled><i data-lucide="upload"></i>Publicar archivos</button></div>
       </section>
-
-      <section class="admin-section">
-        <div class="section-inner admin-grid">
-          <form class="admin-card" id="admin-form">
-            <label>
-              Clave admin
-              <input id="admin-key" type="password" placeholder="itba-admin" />
-            </label>
-            <label>
-              Carrera
-              <select id="admin-career"></select>
-            </label>
-            <label>
-              Año
-              <select id="admin-year">
-                <option value="1">1</option>
-                <option value="2">2</option>
-                <option value="3">3</option>
-                <option value="4">4</option>
-                <option value="5">5</option>
-              </select>
-            </label>
-            <label>
-              Cuatrimestre
-              <select id="admin-term">
-                <option value="1">1</option>
-                <option value="2">2</option>
-              </select>
-            </label>
-            <label>
-              Materia
-              <select id="admin-subject"></select>
-            </label>
-            <label>
-              Tipo de material
-              <select id="admin-type">
-                <option>Parcial</option>
-                <option>Resumen</option>
-                <option>Bibliografia</option>
-                <option>Guia</option>
-                <option>TP</option>
-              </select>
-            </label>
-            <label>
-              Titulo visible
-              <input id="admin-title" type="text" placeholder="Ej: Parcial 2024 resuelto" />
-            </label>
-            <label>
-              Archivo o enlace
-              <input id="admin-url" type="text" placeholder="materiales/informatica/analisis-1/parcial-2024.pdf" />
-            </label>
-            <button type="submit">Generar entrada</button>
-          </form>
-
-          <aside class="admin-card warm-card">
-            <h2>Como entrar</h2>
-            <p>
-              Entras desde el boton Admin del menu o escribiendo
-              <strong>/admin.html</strong> al final del dominio.
-            </p>
-            <p>
-              Clave temporal: <strong>itba-admin</strong>. Esto no es seguridad
-              real; solo evita cambios accidentales mientras la web sea estatica.
-            </p>
-            <h2>Resultado</h2>
-            <p id="admin-message">Completa el formulario para generar la ficha.</p>
-            <pre id="admin-output"></pre>
-          </aside>
-        </div>
-      </section>
+      <footer>Lambda · Biblioteca Virtual ITBA <span>Proyecto estudiantil independiente</span></footer>
     </main>
-
-    <script src="data.js"></script>
-    <script src="admin.js"></script>
-  </body>
+  </div>
+  <p id="toast" role="status" hidden></p>
+  <script src="lucide.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.116.0"></script>
+  <script src="supabase-config.js"></script>
+  <script src="supabase-client.js"></script>
+  <script src="auth-guard.js"></script>
+  <script src="admin-access.js"></script>
+  <script src="data.js"></script>
+  <script src="admin-service.js"></script>
+  <script src="admin.js?v=upload-1"></script>
+</body>
 </html>

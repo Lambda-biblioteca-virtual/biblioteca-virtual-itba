@@ -37,21 +37,19 @@ permite usar una imagen de portada; sin imagen se muestra una cubierta con
 la materia y el tipo. No se publican archivos de muestra como material real.
 
 Los iconos locales de Lucide (0.468.0) incluyen su licencia en
-`lucide-LICENSE.txt`. La interfaz publica usa `library.css`; `styles.css` conserva
-los estilos del panel administrador.
+`lucide-LICENSE.txt`. La interfaz usa `library.css` y `lambda.css`;
+el panel de carga agrega `admin-upload.css`.
 
 ## Admin
 
-El panel esta en `admin.html`.
+El panel esta en https://biblioteca-virtual-itba.vercel.app/admin.html.
+Requiere una cuenta institucional de Google y permisos de administrador en
+Supabase. El enlace Subir material solo aparece para administradores.
 
-En la web publicada se entra agregando `/admin.html` al dominio:
+Permite seleccionar o arrastrar archivos, clasificarlos en lote o individualmente
+y publicarlos en Supabase Storage y en el catalogo. No requiere cambios en GitHub
+para cada carga. Los tres administradores tienen iguales permisos.
 
-`https://gaelstella.github.io/biblioteca-virtual-itba/admin.html`
-
-Clave temporal:
-
-`itba-admin`
-
-Importante: GitHub Pages es estatico. El panel admin genera la ficha del
-material, pero para que el archivo quede online hay que subirlo al repositorio y
-publicar el cambio.
+Activacion: ejecutar `supabase-admin.sql` en SQL Editor, despues de la configuracion
+base `supabase-schema.sql`. Ver `CONFIGURAR-CARGAS.md` para los pasos, limites y
+comprobaciones. La configuracion del acceso con Google esta en `CONFIGURAR-LOGIN.md`.

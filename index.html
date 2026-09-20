@@ -19,7 +19,7 @@
       <a href="#descargas" data-view="descargas"><i data-lucide="download"></i><span>Descargas</span></a>
       <a href="#guardados" data-view="guardados"><i data-lucide="bookmark"></i><span>Guardados</span><small id="saved-count">0</small></a>
     </nav>
-    <div class="sidebar-bottom"><a href="admin.html"><i data-lucide="settings-2"></i><span>Administrar</span></a><p>Hecha para compartir.<br>Y seguir aprendiendo.</p></div>
+    <div class="sidebar-bottom"><a href="admin.html" data-admin-link hidden><i data-lucide="upload"></i><span>Subir material</span></a><p>Hecha para compartir.<br>Y seguir aprendiendo.</p></div>
   </aside>
   <div class="workspace">
     <header class="topbar"><span>Lambda <strong>Biblioteca Virtual ITBA</strong></span><button class="icon-button" id="logout" title="Cerrar sesión" aria-label="Cerrar sesión"><i data-lucide="log-out"></i></button></header>
@@ -47,6 +47,7 @@
   <script src="supabase-config.js"></script>
   <script src="supabase-client.js"></script>
   <script src="auth-guard.js"></script>
+  <script src="admin-access.js"></script>
   <script src="data.js"></script>
   <script src="app.js?v=auth-1"></script>
 </body>
